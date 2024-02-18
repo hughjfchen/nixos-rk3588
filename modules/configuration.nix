@@ -30,7 +30,13 @@ in {
     minicom
   ];
 
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
   # Enable the OpenSSH daemon.
+
   services.openssh = {
     enable = lib.mkDefault true;
     settings = {
@@ -63,6 +69,23 @@ in {
     "${username}" = {};
     docker = {};
   };
+
+  # config NOPASSWORD for the user
+  security.sudo.extraRules= [
+    { users = [ "${username}" ];
+      commands = [
+        { command = "ALL" ;
+           options= [ "NOPASSWD" ]; # "SETENV" # Adding the following could be a good idea
+        }
+      ];
+    }
+  ];
+
+  # some env settting for shell
+  environment.interactiveShellInit = ''
+    alias 'ltr=ls -ltr'
+    export 'TERM=xterm-color'
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
