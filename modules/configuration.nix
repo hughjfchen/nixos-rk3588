@@ -12,7 +12,19 @@
 in {
   nix.settings = {
     experimental-features = ["nix-command" "flakes"];
+    # Binary Cache for Haskell.nix
+    trusted-public-keys = [
+      "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+      "loony-tools:pr9m4BkM/5/eSTZlkQyRt57Jz7OMBxNSUiMC4FkcNfk="
+    ];
+    substituters = [
+      "https://cache.iog.io"
+      "https://cache.zw3rk.com"
+    ];
   };
+
+  # Set your time zone.
+  time.timeZone = "Asia/Shanghai";
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -28,17 +40,26 @@ in {
     mtdutils
     i2c-tools
     minicom
+
+    # some utils
+    file
+    tree
+    psmisc
+
+    # some dev tools
+    efm-langserver
+    nil
+    shellcheck
+    gmp
+    emacs29-nox
   ];
 
   # use systemd-network instead
   networking.useNetworkd = lib.mkDefault true;
   systemd.network.enable = lib.mkDefault true;
 
-  # need to set the interface MAC address
-  networking.interfaces.end1.macAddress = "00:11:22:33:44:55";
-
   # use dhcp for the LAN interface
-  systemd.network.networks."10-lan" = {
+  systemd.network.networks."40-end1" = {
     matchConfig.Name = "end1";
     networkConfig = {
       # start a DHCP Client for IPv4 Addressing/Routing
@@ -47,11 +68,14 @@ in {
       IPv6AcceptRA = true;
     };
     # make routing on this interface a dependency for network-online.target
-    linkConfig.RequiredForOnline = "routable";
+    linkConfig = {
+      RequiredForOnline = "routable";
+      MACAddress = "c2:d3:89:3c:a2:6e";
+    };
   };
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -114,4 +138,37 @@ in {
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
+
+
+  # add a service unit to start the sshuttle poor man's VPN service
+  systemd.services.sshuttle = {
+    description = "the poor man's VPN";
+    wantedBy = [ "multi-user.target" ]; # starts after login
+    after = [ "network-online.target" ];
+    serviceConfig = {
+      Restart = "on-failure";
+      ExecStart = "${pkgs.sshuttle}/bin/sshuttle -x detachmentsoft.top -x detachmentsoft.cyou --latency-buffer-size 65536 --dns -r chenjf@detachmentsoft.top 0/0";
+    };
+  };
+
+  # add a periodly running command to make sshuttle tunnel active
+  systemd.services."check-sshuttle-tunnel" = {
+    script = ''
+      set -eu
+      ${pkgs.curl}/bin/curl https://www.twitter.com
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "chenjf";
+    };
+  };
+
+  systemd.timers."check-sshuttle-tunnel" = {
+    wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "15m";
+        OnUnitActiveSec = "15m";
+        Unit = "check-sshuttle-tunnel.service";
+      };
+  };
 }
