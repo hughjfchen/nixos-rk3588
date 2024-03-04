@@ -30,6 +30,26 @@ in {
     minicom
   ];
 
+  # use systemd-network instead
+  networking.useNetworkd = lib.mkDefault true;
+  systemd.network.enable = lib.mkDefault true;
+
+  # need to set the interface MAC address
+  networking.interfaces.end1.macAddress = "00:11:22:33:44:55";
+
+  # use dhcp for the LAN interface
+  systemd.network.networks."10-lan" = {
+    matchConfig.Name = "end1";
+    networkConfig = {
+      # start a DHCP Client for IPv4 Addressing/Routing
+      DHCP = "ipv4";
+      # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
+      IPv6AcceptRA = true;
+    };
+    # make routing on this interface a dependency for network-online.target
+    linkConfig.RequiredForOnline = "routable";
+  };
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
