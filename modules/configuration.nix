@@ -47,8 +47,6 @@ in {
     psmisc
 
     # some dev tools
-    efm-langserver
-    nil
   ];
 
   # use systemd-network instead
