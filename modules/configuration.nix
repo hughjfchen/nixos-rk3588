@@ -49,7 +49,6 @@ in {
     # some dev tools
     efm-langserver
     nil
-    shellcheck
   ];
 
   # use systemd-network instead
