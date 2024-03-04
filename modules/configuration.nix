@@ -50,7 +50,6 @@ in {
     efm-langserver
     nil
     shellcheck
-    gmp
   ];
 
   # use systemd-network instead
