@@ -51,7 +51,6 @@ in {
     nil
     shellcheck
     gmp
-    emacs29-nox
   ];
 
   # use systemd-network instead
