@@ -6,8 +6,10 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     # GPU drivers
+    # had to use my own fork, because the disk_cache patch on NixOS 23.11
+    # failed to apply with panfork csf branch
     mesa-panfork = {
-      url = "gitlab:panfork/mesa/csf";
+      url = "gitlab:hughjfchen/mesa/csf";
       flake = false;
     };
 
