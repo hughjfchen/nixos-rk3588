@@ -69,7 +69,7 @@
       };
 
       nixosConfigurations =
-        # sdImage - boot via U-Boot
+        # sdImage - boot via U-Boot - use cross-compilation for the kernel only
         (builtins.mapAttrs (name: board:
           nixpkgs.lib.nixosSystem {
             # Use emulated target system here.
@@ -90,7 +90,29 @@
             ];
           })
         self.nixosModules)
-        # UEFI system, boot via edk2-rk3588
+        # sdImage - boot via U-Boot - fully cross-compiled
+        // (nixpkgs.lib.mapAttrs'
+          (name: board:
+            nixpkgs.lib.nameValuePair
+            (name + "-cross")
+            (nixpkgs.lib.nixosSystem {
+              system = localSystem;
+              inherit specialArgs;
+              modules = [
+                ./modules/configuration.nix
+                board.core
+                board.sd-image
+
+                {
+                  networking.hostName = name;
+                  sdImage.imageBaseName = "${name}-sd-image";
+
+                  nixpkgs.crossSystem.config = "aarch64-unknown-linux-gnu";
+                }
+              ];
+            }))
+          self.nixosModules)
+        # UEFI system, boot via edk2-rk3588 - use cross-compilation for the kernel only
         // (nixpkgs.lib.mapAttrs'
           (name: board:
             nixpkgs.lib.nameValuePair
