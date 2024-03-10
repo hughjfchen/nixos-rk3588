@@ -39,35 +39,54 @@
         "type": "github"
       }
     },
-    "mesa-panfork": {
-      "flake": false,
+    "nixlib": {
       "locked": {
-        "lastModified": 1709643520,
-        "narHash": "sha256-7LzHIQZSJpXBBLI8rKBa2EB1zAxnGCDIpr6eqqpllJ4=",
-        "owner": "hughjfchen",
-        "repo": "mesa",
-        "rev": "6b183a728721af8c7f2eacac835cfbbcaa8956f5",
-        "type": "gitlab"
+        "lastModified": 1709426687,
+        "narHash": "sha256-jLBZmwXf0WYHzLkmEMq33bqhX55YtT5edvluFr0RcSA=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "7873d84a89ae6e4841528ff7f5697ddcb5bdfe6c",
+        "type": "github"
       },
       "original": {
-        "owner": "hughjfchen",
-        "ref": "csf",
-        "repo": "mesa",
-        "type": "gitlab"
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixos-generators": {
+      "inputs": {
+        "nixlib": "nixlib",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709557527,
+        "narHash": "sha256-PV8oYqhTHX6FGZMQ1m5dhRuS914AhofPwgnAMhUZtwE=",
+        "owner": "nix-community",
+        "repo": "nixos-generators",
+        "rev": "d048d6fc4bada612ff08d4b9d5edc48d45389431",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-generators",
+        "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1709565521,
-        "narHash": "sha256-YP3H7Lm3IhOKHIcn+qMCLRINJG313Io5CjvNTJyrnhY=",
+        "lastModified": 1709309926,
+        "narHash": "sha256-VZFBtXGVD9LWTecGi6eXrE0hJ/mVB3zGUlHImUs2Qak=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9a5f1a573376eeb8c525f936eed32fabfb6e81be",
+        "rev": "79baff8812a0d68e24a836df0a364c678089e2c7",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-23.11-small",
+        "ref": "nixos-23.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -103,7 +122,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "mesa-panfork": "mesa-panfork",
+        "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": "pre-commit-hooks"
       }
