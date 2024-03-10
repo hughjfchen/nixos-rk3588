@@ -32,6 +32,7 @@ in {
   environment.systemPackages = with pkgs; [
     git # used by nix flakes
     curl
+    wget
 
     neofetch
     lm_sensors # `sensors`
@@ -120,7 +121,9 @@ in {
 
   # some env settting for shell
   environment.interactiveShellInit = ''
+    alias 'll=ls -l'
     alias 'ltr=ls -ltr'
+    alias 'ltra=ls -ltra'
     export 'TERM=xterm-color'
   '';
 
