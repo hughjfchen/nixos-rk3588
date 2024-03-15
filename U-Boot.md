@@ -47,7 +47,7 @@ zstdcat result/sd-image/orangepi5plus-sd-image-*.img.zst | sudo dd status=progre
 # For Orange PI 5 
 # ==================================
 nix build .#sdImage-opi5
-# nix build .#sdImage-opi5-cross  # fully corss-compiled
+# nix build .#sdImage-opi5-cross  # fully cross-compiled
 stdcat result/sd-image/orangepi5-sd-image-*.img.zst | sudo dd status=progress bs=8M of=/dev/sdX
 ```
 

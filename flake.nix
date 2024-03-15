@@ -141,7 +141,7 @@
         sdImage-opi5plus = self.nixosConfigurations.orangepi5plus.config.system.build.sdImage;
         sdImage-rock5a = self.nixosConfigurations.rock5a.config.system.build.sdImage;
 
-        sdImage-opi5-corss = self.nixosConfigurations.orangepi5-cross.config.system.build.sdImage;
+        sdImage-opi5-cross = self.nixosConfigurations.orangepi5-cross.config.system.build.sdImage;
         sdImage-opi5plus-cross = self.nixosConfigurations.orangepi5plus-cross.config.system.build.sdImage;
         sdImage-rock5a-cross = self.nixosConfigurations.rock5a-cross.config.system.build.sdImage;
 
