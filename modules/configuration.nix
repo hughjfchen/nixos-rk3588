@@ -72,7 +72,7 @@ in {
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 443 8883 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -121,10 +121,11 @@ in {
 
   # some env settting for shell
   environment.interactiveShellInit = ''
+    alias 'ls=ls --color=always'
     alias 'll=ls -l'
     alias 'ltr=ls -ltr'
     alias 'ltra=ls -ltra'
-    export 'TERM=xterm-color'
+    export 'TERM=xterm-256color'
   '';
 
   # This value determines the NixOS release from which the default
