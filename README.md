@@ -4,9 +4,6 @@
 
 A minimal flake to run NixOS on RK3588/RK3588s based SBCs, support both UEFI & U-Boot.
 
-![](_img/nixos-orangepi5plus.webp)
-![](_img/nixos-rock5a.webp)
-
 Default user: `rk`, default password: `rk3588`
 
 ## Boards
@@ -30,10 +27,9 @@ U-Boot support:
 ## TODO
 
 - [ ] UEFI support for Rock 5A, Rock 5B, Orange Pi 5B, NanoPI R6C, NanoPi R6S.
-- [ ] mainline/collabora kernel support.
 - [ ] verify all the hardware features available by RK3588/RK3588s
   - [x] ethernet (rj45)
-  - [ ] m.2 interface(pcie & sata)
+  - [x] m.2 interface(pcie & sata)
   - [ ] wifi/bluetooth
   - [ ] audio
   - [x] gpio
@@ -81,12 +77,18 @@ The primary steps involved are:
 2. Build the NixOS rootfs using this flake, leveraging the kernel and device tree provided by [armbian].
    - To make all the hardware features available, we need to add its firmwares to the rootfs. Since there is no customization required for the firmwares too, we can directly use the precompiled firmwares from Armbian & Vendor too.
 
+## Screenshots
+
+![](_img/nixos-orangepi5plus.webp)
+![](_img/nixos-rock5a.webp)
+
 ## References
 
 - [K900/nix](https://gitlab.com/K900/nix)
 - [aciceri/rock5b-nixos](https://github.com/aciceri/rock5b-nixos)
 - [nabam/nixos-rockchip](https://github.com/nabam/nixos-rockchip)
 - [fb87/nixos-orangepi-5x](https://github.com/fb87/nixos-orangepi-5x)
+- [dvdjv/socle](https://github.com/dvdjv/socle)
 - [edk2-rk3588]
 
 And I also got a lot of help in the [NixOS on ARM Matrix group](https://matrix.to/#/#nixos-on-arm:nixos.org)!

@@ -33,22 +33,23 @@ Build an sdImage by `nix build`, and then flash it to a SD card using `dd`(pleas
 # ==================================
 # For Orange PI 5 Plus
 # ==================================
-# 1. Build using the qemu-emulated aarch64 environment
+# 1. Build using the qemu-emulated aarch64 environment or on Orange Pi 5 Plus itself.
 # In this way, we can take advantage of the official build cache on NixOS to greatly speed up the build
-nix build .#sdImage-opi5plus
+# it takes about 40 minutes to build the image(mainly the kernel) on my Orange Pi 5 Plus.
+nix build github:ryan4yin/nixos-rk3588/2024032400#sdImage-opi5plus
 # 2. Build using the cross-compilation environment
 # NOTE: This will take a long time to build, as the official build cache is not available for the cross-compilation environment,
 # you have to build everything from scratch.
-nix build .#sdImage-opi5plus-cross
+nix build github:ryan4yin/nixos-rk3588/2024032400#sdImage-opi5plus-cross
 
 zstdcat result/sd-image/orangepi5plus-sd-image-*.img.zst | sudo dd status=progress bs=8M of=/dev/sdX
 
 # ==================================
 # For Orange PI 5 
 # ==================================
-nix build .#sdImage-opi5
+nix build github:ryan4yin/nixos-rk3588/2024032400#sdImage-opi5
 # nix build .#sdImage-opi5-cross  # fully cross-compiled
-stdcat result/sd-image/orangepi5-sd-image-*.img.zst | sudo dd status=progress bs=8M of=/dev/sdX
+zstdcat result/sd-image/orangepi5-sd-image-*.img.zst | sudo dd status=progress bs=8M of=/dev/sdX
 ```
 
 For Rock 5A, it requires a little more work to flash the image to the sd card:
