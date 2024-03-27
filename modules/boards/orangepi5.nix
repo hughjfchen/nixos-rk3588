@@ -1,7 +1,11 @@
 # =========================================================================
 #      Orange Pi 5 Specific Configuration
 # =========================================================================
-{rk3588, ...}: let
+{
+  pkgs,
+  rk3588,
+  ...
+}: let
   pkgsKernel = rk3588.pkgsKernel;
 in {
   imports = [
@@ -9,7 +13,7 @@ in {
   ];
 
   boot = {
-    kernelPackages = pkgsKernel.linuxPackagesFor (pkgsKernel.callPackage ../../pkgs/kernel/legacy.nix {});
+    kernelPackages = pkgsKernel.linuxPackagesFor (pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix {});
 
     # kernelParams copy from Armbian's /boot/armbianEnv.txt & /boot/boot.cmd
     kernelParams = [
@@ -37,6 +41,8 @@ in {
       overlays = [];
     };
 
-    firmware = [];
+    firmware = [
+      (pkgs.callPackage ../../pkgs/orangepi-firmware {})
+    ];
   };
 }

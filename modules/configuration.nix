@@ -125,7 +125,7 @@ in {
     alias 'll=ls -l'
     alias 'ltr=ls -ltr'
     alias 'ltra=ls -ltra'
-    export 'TERM=xterm-color'
+    export 'TERM=xterm-256color'
   '';
 
   # This value determines the NixOS release from which the default

@@ -21,6 +21,7 @@ The steps to do this:
 1. In the UEFI boot menu
     1. Enter [Device Manager] => [Rockchip Platform Configuration] => [ACPI / Device Tree]
     1. Change [Config Table Mode] to `Both`.
+    1. Change [Support DTB override & overlays] to `Enabled`.(see <https://github.com/ryan4yin/nixos-rk3588/issues/22> for more details)
 
 
 ## 2. Flash NixOS to SD card
@@ -32,14 +33,17 @@ First, build the raw efi image:
 > It will takes a long time(about 12mins) to finish, as we have to use the emulated system on x64 host to build the raw efi image.
 
 ```bash
-# for orange pi 5
-nix build .#rawEfiImage-opi5 --show-trace -L --verbose
-
+# 1. Build using the qemu-emulated aarch64 environment or on Orange Pi 5 Plus itself.
+# In this way, we can take advantage of the official build cache on NixOS to greatly speed up the build
+# it takes about 40 minutes to build the image(mainly the kernel) on my Orange Pi 5 Plus.
 # for orange pi 5 plus
-nix build .#rawEfiImage-opi5plus --show-trace -L --verbose
+nix build github:ryan4yin/nixos-rk3588/2024032400#rawEfiImage-opi5plus --show-trace -L --verbose
+
+# for orange pi 5
+nix build github:ryan4yin/nixos-rk3588/2024032400#rawEfiImage-opi5 --show-trace -L --verbose
 
 # for rock 5a
-nix build .#rawEfiImage-rock5a --show-trace -L --verbose
+nix build github:ryan4yin/nixos-rk3588/2024032400#rawEfiImage-rock5a --show-trace -L --verbose
 ```
 
 If you encounter issues like [`cannot allocate memory` despite free reporting "available"](https://stackoverflow.com/questions/46464785/cannot-allocate-memory-despite-free-reporting-available) when building the raw efi image, check your `dmesg`, and try to fix it via:
@@ -55,9 +59,21 @@ Then, flash the raw efi image to the board's SSD / SD card:
 # For Orange Pi 5 & Orange Pi 5 Plus
 # ====================================
 
-# please replace `/dev/sdX` with the correct device name of your sd card
+# Please replace `/dev/sdX` with the correct device name of your sd card
 cat result | sudo dd status=progress bs=8M of=/dev/sdX
 
+# Due to https://github.com/ryan4yin/nixos-rk3588/issues/22
+# We have to add our dtbs into edk2-rk3588's overlays folder `/boot/dtb/base`
+mkdir boot root
+mkdir -p /boot/dtb/base
+mount /dev/sdX1 boot
+mount /dev/sdX2 root
+# Get the hash of the kernel image
+ls boot/kernels/ | grep Image  # => 9h87sqy9ix9qsvlyqcqsmjbzfs1ymgqx-k-Image
+# Copy the dtb file to the overlays folder, the name should be the same as the hash of the kernel image
+ cp root/nix/store/9h87sqy9ix9qsvlyqcqsmjbzfs1ymgqx-k/dtbs/rockchip/* /boot/dtb/base/
+umount boot root
+sudo sync
 
 # ====================================
 # For Rock 5A(Not Work Yet!!!)
