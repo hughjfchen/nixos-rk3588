@@ -72,7 +72,7 @@ in {
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 443 8883 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -121,6 +121,7 @@ in {
 
   # some env settting for shell
   environment.interactiveShellInit = ''
+    alias 'ls=ls --color=always'
     alias 'll=ls -l'
     alias 'ltr=ls -ltr'
     alias 'ltra=ls -ltra'
@@ -143,7 +144,8 @@ in {
     after = [ "network-online.target" ];
     serviceConfig = {
       Restart = "on-failure";
-      ExecStart = "${pkgs.sshuttle}/bin/sshuttle -x detachmentsoft.top -x detachmentsoft.cyou --latency-buffer-size 65536 --dns -r chenjf@detachmentsoft.top 0/0";
+      ExecStartPre = "${pkgs.coreutils-full}/bin/sleep 1";
+      ExecStart = "${pkgs.sshuttle}/bin/sshuttle --disable-ipv6 -x detachmentsoft.top -x detachmentsoft.cyou --latency-buffer-size 65536 --dns -r chenjf@detachmentsoft.top 0/0";
     };
   };
 
